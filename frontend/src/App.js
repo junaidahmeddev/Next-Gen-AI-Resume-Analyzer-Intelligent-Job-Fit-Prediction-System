@@ -16,6 +16,7 @@ function App() {
 
   /**
    * API Communication Module
+   * Updated to use Render Live Backend URL
    */
   const handleAnalyze = async () => {
     if (!file || !jd) {
@@ -29,11 +30,12 @@ function App() {
     formData.append('job_description', jd);
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/analyze', formData);
+      // LIVE BACKEND URL UPDATED BELOW
+      const response = await axios.post('https://next-gen-ai-resume-analyzer-intelligent.onrender.com/analyze', formData);
       setResult(response.data);
     } catch (error) {
       console.error("API Error:", error);
-      alert("Connection Failed: Ensure Flask Backend is running on Port 5000.");
+      alert("Connection Failed: Ensure Render Backend is Live. Check your internet connection.");
     }
     setLoading(false);
   };
@@ -104,7 +106,7 @@ function App() {
         <div className="status-container">
           <div className="nlp-badge">AI Core v1.0.4</div>
           <div className="status-dot">
-            <span className="dot"></span> System Online
+            <span className="dot" style={{ backgroundColor: '#2ecc71' }}></span> System Online (Live)
           </div>
         </div>
       </aside>
@@ -124,30 +126,24 @@ function App() {
             <div className="card-header">Data Ingestion</div>
             <div className="input-body">
               
-              {/* --- BUG FIX APPLIED HERE --- */}
-              {/* Humne 'div' aur 'onClick' hata diya hai. */}
-              {/* Ab sirf 'label' hai jo automatically input control karta hai. */}
-              
               <label 
                 className={`file-upload ${dragOver ? 'drag-over' : ''}`}
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
-                style={{ cursor: 'pointer', display: 'block' }} // Ensure clickable area
+                style={{ cursor: 'pointer', display: 'block' }}
               >
                 <input 
                   type="file" 
                   onChange={(e) => handleFileSelect(e.target.files[0])}
                   accept=".pdf,.docx"
-                  style={{ display: 'none' }} // Hidden input
+                  style={{ display: 'none' }}
                 />
                 <span className="upload-text" style={{ pointerEvents: 'none' }}>
                   {file ? `📄 ${file.name}` : "Drag & Drop Resume (PDF/DOCX) or Click to Browse"}
                 </span>
               </label>
 
-              {/* --- END FIX --- */}
-              
               <textarea 
                 value={jd} 
                 onChange={(e) => setJd(e.target.value)} 
