@@ -75,7 +75,7 @@ function App() {
         <div className="logo-section">
           <h2 className="project-title">
             Resume Analyzer <br /> 
-            <span>& Job Fit Prediction</span>
+            <span>| Job Fit Prediction</span>
           </h2>
         </div>
 
