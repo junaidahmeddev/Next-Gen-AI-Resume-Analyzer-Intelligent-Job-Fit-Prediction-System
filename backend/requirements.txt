@@ -1,8 +1,10 @@
 flask
-nltk
-scikit-learn
-pandas
-numpy
+flask-cors
+spacy
 PyPDF2
 docx2txt
-gunicorn==20.1.0
+pandas
+scikit-learn
+gunicorn
+nltk
+numpy
