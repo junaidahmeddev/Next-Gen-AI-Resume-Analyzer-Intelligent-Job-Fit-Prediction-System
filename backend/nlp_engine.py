@@ -6,19 +6,22 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# --- Setup ---
+# --- Setup (Fixed for Render Deployment) ---
 try:
+    # Render par punkt_tab ka hona zaroori hai naye NLTK versions ke liye
     nltk.data.find('tokenizers/punkt')
+    nltk.data.find('tokenizers/punkt_tab')
     nltk.data.find('corpora/stopwords')
     nltk.data.find('corpora/wordnet')
 except LookupError:
     nltk.download('punkt')
+    nltk.download('punkt_tab')
     nltk.download('stopwords')
     nltk.download('wordnet')
 
 lemmatizer = WordNetLemmatizer()
 
-# --- Core Knowledge Base (Hammad ke resume ke mutabiq) ---
+# --- Core Knowledge Base ---
 TECHNICAL_SKILLS_DB = {
     'python', 'java', 'c++', 'c#', 'javascript', 'sql', 'react', 'node.js', 
     'web design', 'design thinking', 'wireframe creation', 'front end coding', 'backend tech',
@@ -42,22 +45,22 @@ def clean_text(text):
 
 def extract_skills(text):
     text_lower = text.lower()
-    # Direct phrase matching logic
     return {skill for skill in TECHNICAL_SKILLS_DB if skill in text_lower}
 
 def calculate_match_score(resume_text, jd_text):
     if not resume_text or not jd_text: return 0.0
 
-    # 1. Cosine Similarity (Reduced weight: 30%)
+    # 1. Cleaning
     r_cleaned = " ".join(clean_text(resume_text))
     j_cleaned = " ".join(clean_text(jd_text))
     
+    # 2. Cosine Similarity (30% weight)
     vectorizer = TfidfVectorizer(ngram_range=(1, 2))
     try:
         matrix = vectorizer.fit_transform([r_cleaned, j_cleaned])
         cosine_sim = cosine_similarity(matrix[0:1], matrix[1:2])[0][0] * 100
         
-        # 2. Key Skill Overlap (High weight: 70%) - ASLI FIX
+        # 3. Key Skill Overlap (70% weight)
         r_skills = extract_skills(resume_text)
         j_skills = extract_skills(jd_text)
         
@@ -66,10 +69,10 @@ def calculate_match_score(resume_text, jd_text):
             match_count = len(r_skills.intersection(j_skills))
             skill_score = (match_count / len(j_skills)) * 100
         
-        # Hybrid logic: Agar skills match hain to score foran jump karega
         final_score = (cosine_sim * 0.3) + (skill_score * 0.7)
         return round(min(final_score, 100.0), 2)
-    except:
+    except Exception as e:
+        print(f"Error in calculation: {e}")
         return 0.0
 
 def identify_missing_skills(resume_text, jd_text):
