@@ -5,3 +5,4 @@ pandas
 numpy
 PyPDF2
 docx2txt
+gunicorn==20.1.0
