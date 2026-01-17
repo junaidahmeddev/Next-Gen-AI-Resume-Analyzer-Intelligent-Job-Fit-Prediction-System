@@ -13,6 +13,7 @@ body {
   font-family: 'Inter', 'Segoe UI', sans-serif;
   background-color: var(--bg-main); 
   color: #c9d1d9;
+  overflow-x: hidden; /* Screen se bahar nikalne se rokta hai */
 }
 
 .dashboard-container { 
@@ -20,7 +21,7 @@ body {
   height: 100vh; 
 }
 
-/* --- Sidebar --- */
+/* --- Sidebar (Desktop) --- */
 .sidebar {
   width: var(--sidebar-width); 
   background: #010409; 
@@ -31,6 +32,7 @@ body {
   align-items: center; 
   text-align: center;
   position: relative;
+  flex-shrink: 0; /* Sidebar ko dabne se rokta hai */
 }
 
 .project-title { 
@@ -89,6 +91,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  text-align: left;
 }
 
 .nlp-badge { 
@@ -189,13 +192,61 @@ textarea {
 .tag-match { background: rgba(35, 134, 54, 0.12); color: #3fb950; padding: 5px 10px; border-radius: 6px; font-size: 11px; margin: 3px; display: inline-block; }
 .tag-gap { background: rgba(218, 54, 51, 0.12); color: #f85149; padding: 6px 14px; border-radius: 6px; font-size: 11px; margin: 3px; display: inline-block; }
 
-/* --- MOBILE RESPONSIVE --- */
+/* --- MOBILE RESPONSIVE FIX (Edited) --- */
 @media (max-width: 850px) {
-  .dashboard-container { flex-direction: column; height: auto; }
-  .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid #30363d; position: static; }
-  .sidebar-features { display: none; }
-  .status-container { position: static; margin-top: 1rem; align-items: center; }
-  .content-grid { grid-template-columns: 1fr; padding: 1rem; }
-  .score-summary { flex-direction: column; text-align: center; }
-  .radial-progress { width: 90px; height: 90px; }
+  .dashboard-container { 
+    flex-direction: column; 
+    height: auto; 
+  }
+
+  .sidebar { 
+    width: 100% !important; 
+    height: auto !important; 
+    padding: 1rem !important; 
+    position: relative !important; 
+    border-right: none;
+    border-bottom: 1px solid #30363d;
+    box-sizing: border-box;
+  }
+
+  .project-title {
+    padding-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .sidebar-features { 
+    display: none !important; /* Mobile par list chupa di taake jagah bachay */
+  }
+
+  .status-container { 
+    position: static !important; 
+    margin-top: 10px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .content-grid { 
+    grid-template-columns: 1fr !important; 
+    padding: 1rem; 
+    gap: 1rem;
+  }
+
+  .main-viewport {
+    height: auto;
+  }
+
+  .header-bar {
+    padding: 1rem;
+  }
+
+  .score-summary { 
+    flex-direction: column; 
+    text-align: center; 
+  }
+
+  .radial-progress { 
+    width: 90px; 
+    height: 90px; 
+  }
 }
